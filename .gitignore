@@ -128,8 +128,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-portfolio-env/
-portfolio-prod-env/
+hmcts-env/
 
 # Spyder project settings
 .spyderproject
