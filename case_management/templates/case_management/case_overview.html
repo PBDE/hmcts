@@ -1,1 +1,5 @@
 {% extends 'case_management/layout.html' %}
+
+{% block body %}
+    <h2 class="cases-overview-txt">{{ greeting_message }}{{ request.user.username }}</h2>
+{% endblock %}

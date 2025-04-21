@@ -4,11 +4,11 @@ from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect
 
 from . forms import LoginForm
+from . text import USER_GREETING_TEXT, LOGIN_ERROR_MESSAGE
 
 LOGIN_TEMPLATE = "case_management/login.html"
 CASE_OVERVIEW_TEMPLATE = "case_management/case_overview.html"
 LOGIN_REDIRECT_PATTERN_NAME = "case_management:case_overview"
-LOGIN_ERROR_MESSAGE = "Details did not match those of an existing user"
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -34,4 +34,4 @@ def login_view(request):
     })
 
 def case_overview_view(request):
-    return render(request, CASE_OVERVIEW_TEMPLATE)
+    return render(request, CASE_OVERVIEW_TEMPLATE, {'greeting_message': USER_GREETING_TEXT})
