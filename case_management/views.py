@@ -1,18 +1,18 @@
 from django.shortcuts import render
 from django.urls import reverse
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect
 
 from . forms import LoginForm
 
 LOGIN_TEMPLATE = "case_management/login.html"
+CASE_OVERVIEW_TEMPLATE = "case_management/case_overview.html"
 LOGIN_REDIRECT_PATTERN_NAME = "case_management:case_overview"
 LOGIN_ERROR_MESSAGE = "Details did not match those of an existing user"
 
-def login(request):
+def login_view(request):
     if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse(LOGIN_REDIRECT_PATTERN_NAME, 
-                                            kwargs={"user": request.user.username})
+        return HttpResponseRedirect(reverse(LOGIN_REDIRECT_PATTERN_NAME)
         )
     if request.method == "POST":
         login_form = LoginForm(request.POST)
@@ -22,8 +22,7 @@ def login(request):
             user = authenticate(request, username=username, password=password)
             if user:
                 login(request, user)
-                return HttpResponseRedirect(reverse(LOGIN_REDIRECT_PATTERN_NAME, 
-                                                    kwargs={"user": username})
+                return HttpResponseRedirect(reverse(LOGIN_REDIRECT_PATTERN_NAME)
                 )
         return render(request, 
                       LOGIN_TEMPLATE, 
@@ -33,3 +32,6 @@ def login(request):
     return render(request, LOGIN_TEMPLATE, {
         "form": LoginForm()
     })
+
+def case_overview_view(request):
+    return render(request, CASE_OVERVIEW_TEMPLATE)
