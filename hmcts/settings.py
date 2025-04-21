@@ -31,10 +31,10 @@ DEBUG = env.bool('DEBUG', default=False)
 
 ALLOWED_HOSTS = env.str('ALLOWED_HOSTS').split(',')
 
-
 # Application definition
 
 INSTALLED_APPS = [
+    'case_management',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
