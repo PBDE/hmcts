@@ -1,21 +1,40 @@
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import NoSuchElementException
 from unittest import skip
 
+class FunctionalTest(StaticLiveServerTestCase):
 
-class LandingPageTests(StaticLiveServerTestCase):
+    def setUp(self):
+        self.browser = webdriver.Firefox()
 
-    @skip
+    def tearDown(self):
+        self.browser.quit()
+
+
+class LandingPageTests(FunctionalTest):
+
     def test_user_can_log_in(self):
 
+        FORM_SELECTOR = "form.login-form"
+
         self.browser.get(self.live_server_url)
-        self.fail("Not implemented")
+
+        # the user sees the log in form
+        try:
+            self.browser.find_element(By.CSS_SELECTOR, FORM_SELECTOR)
+        except NoSuchElementException:
+            self.fail(f"Login form with selector {FORM_SELECTOR} not found")
+
+        # the user enters their login details
+
 
     @skip
     def test_logged_in_user_redirected(self):
         self.fail("Not implemented")
 
-class UserPageTests(StaticLiveServerTestCase):
+class UserPageTests(FunctionalTest):
 
     @skip
     def test_user_can_create_task(self):
@@ -25,7 +44,7 @@ class UserPageTests(StaticLiveServerTestCase):
     def test_user_can_select_task(self):
         self.fail("Not implemented")
         
-class TaskPageTests(StaticLiveServerTestCase):
+class TaskPageTests(FunctionalTest):
 
     @skip
     def test_user_can_update_task_status(self):
