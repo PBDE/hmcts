@@ -4,15 +4,15 @@ from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect
 
 from . forms import LoginForm
+from . enums import PatternNames
 from . text import USER_GREETING_TEXT, LOGIN_ERROR_MESSAGE
 
 LOGIN_TEMPLATE = "case_management/login.html"
 CASE_OVERVIEW_TEMPLATE = "case_management/case_overview.html"
-LOGIN_REDIRECT_PATTERN_NAME = "case_management:case_overview"
 
 def login_view(request):
     if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse(LOGIN_REDIRECT_PATTERN_NAME)
+        return HttpResponseRedirect(reverse(PatternNames.CASES_OVERVIEW.value)
         )
     if request.method == "POST":
         login_form = LoginForm(request.POST)
@@ -22,7 +22,7 @@ def login_view(request):
             user = authenticate(request, username=username, password=password)
             if user:
                 login(request, user)
-                return HttpResponseRedirect(reverse(LOGIN_REDIRECT_PATTERN_NAME)
+                return HttpResponseRedirect(reverse(PatternNames.CASES_OVERVIEW.value)
                 )
         return render(request, 
                       LOGIN_TEMPLATE, 

@@ -1,12 +1,8 @@
 from string import ascii_letters, digits, punctuation
-from enum import Enum, auto
 from random import randint
 from django.contrib.auth import get_user_model
 
-class UserDetails(Enum):
-    USERNAME = auto()
-    PASSWORD = auto()
-    EMAIL = auto()
+from case_management.enums import UserDetails
 
 def random_user_details(input_field_type):
 
