@@ -67,3 +67,22 @@ class LoginViewTest(TestCase):
                                     data={"username": incorrect_user_data["username"],
                                           "password": incorrect_user_data["password"]})
         self.assertContains(response, LOGIN_ERROR_MESSAGE)
+
+class CaseOverviewViewTest(TestCase):
+
+    def test_overview_template_returned(self):
+        ...
+
+    def test_create_task_form_returned(self):
+        ...
+
+    def test_new_task_created(self):
+        ...
+
+    def test_user_redirected_after_task_created(self):
+        ...
+
+    def test_invalid_task_response_contains_task_form(self):
+        ...
+
+    

@@ -28,7 +28,6 @@ def random_user_details(input_field_type):
 
     return user_detail
 
-
 def create_user_data():
 
     username = random_user_details(UserDetails.USERNAME)

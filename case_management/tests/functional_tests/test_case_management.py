@@ -1,9 +1,10 @@
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from django.test import Client
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
-from unittest import skip
 from selenium.common.exceptions import WebDriverException
+from unittest import skip
 from time import time, sleep
 
 from case_management.tests.test_utils import create_temporary_user
@@ -87,10 +88,23 @@ class LandingPageTests(FunctionalTest):
     def test_incorrect_login_details(self):
         self.fail("Not implemented")
 
-class UserPageTests(FunctionalTest):
+class CaseOverviewTests(FunctionalTest):
 
-    @skip
     def test_user_can_create_task(self):
+
+        username, _, password = create_temporary_user()
+        client = Client()
+        client.login(username=username, password=password)
+
+        self.browser.get(self.live_server_url)
+
+        # find the create task button
+        # click create task button
+        # wait for create task form to load
+        # enter create task details
+        # submit create task form
+        # check that new task added to the list
+
         self.fail("Not implemented")
 
     @skip
