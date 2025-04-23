@@ -1,13 +1,12 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
-class Task(models.Model):
+TITLE_MAX_LENGTH = 64
 
-    TITLE_MAX_LENGTH = 64
+class Task(models.Model):
 
     title = models.CharField(max_length=TITLE_MAX_LENGTH)
     due_date = models.DateField()
-    assigned_user = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
 
 class TaskHistory(models.Model):
 
@@ -20,13 +19,14 @@ class TaskHistory(models.Model):
     }
 
     status = models.CharField(max_length=1, choices=STATUS_OPTIONS)
-    date_created = models.DateTimeField()
+    date_created = models.DateTimeField(auto_now_add=True)
     task = models.ForeignKey(Task, on_delete=models.PROTECT)
-    user = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
+    created_by = models.ForeignKey(get_user_model(), on_delete=models.PROTECT, related_name='created_tasks')
+    assigned_to = models.ForeignKey(get_user_model(), on_delete=models.PROTECT, related_name='assigned_tasks', null=True)
 
-class TaskNotes(models.Model):
+class TaskNote(models.Model):
 
     description = models.CharField()
-    date_created = models.DateTimeField()
+    date_created = models.DateTimeField(auto_now_add=True)
     task = models.ForeignKey(Task, on_delete=models.PROTECT)
-    user = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
+    created_by = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)

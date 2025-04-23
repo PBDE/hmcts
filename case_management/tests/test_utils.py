@@ -1,6 +1,7 @@
 from string import ascii_letters, digits, punctuation
 from random import randint
 from django.contrib.auth import get_user_model
+from datetime import date
 
 from case_management.enums import UserDetails
 
@@ -47,4 +48,9 @@ def create_temporary_user():
 
     return username, email, password
 
-
+def create_new_task_data():
+        return {
+            "title": "Task Title",
+            "due_date": date(2050, 1, 1),
+            "description" : "Task description"
+        }

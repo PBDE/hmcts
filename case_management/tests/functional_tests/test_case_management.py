@@ -7,7 +7,7 @@ from selenium.common.exceptions import WebDriverException
 from unittest import skip
 from time import time, sleep
 
-from case_management.tests.test_utils import create_temporary_user
+from case_management.tests.test_utils import create_temporary_user, create_new_task_data
 
 class FunctionalTest(StaticLiveServerTestCase):
 
@@ -16,6 +16,11 @@ class FunctionalTest(StaticLiveServerTestCase):
     SELECTOR_LOGIN_BTN = "input.submit-btn"
     SELECTOR_CASE_OVERVIEW_HEADER_TEXT = ".cases-overview-txt"
     SELECTOR_LOGIN_FORM = "form.login-form"
+    SELECTOR_CREATE_TASK_LINK = "a.create-task-link"
+    SELECTOR_CREATE_TASK_FORM = "form.create-task-form"
+    SELECTOR_TASK_TITLE_INPUT = "input#id_title"
+    SELECTOR_TASK_DUE_DATE_INPUT = "input#id_due_date"
+    SELECTOR_TASK_CREATE_BTN = "input.submit-btn"
 
     def setUp(self):
         self.browser = webdriver.Firefox()
@@ -55,7 +60,7 @@ class FunctionalTest(StaticLiveServerTestCase):
         try:
             self.wait_for(lambda: self.browser.find_element(By.CSS_SELECTOR, self.SELECTOR_CASE_OVERVIEW_HEADER_TEXT))
         except NoSuchElementException:
-            self.fail(f"Header with selector {self.SELECTOR_CASE_OVERVIEW_HEADER_TEXT} not found")
+            self.fail(f"Header with {self.SELECTOR_CASE_OVERVIEW_HEADER_TEXT} selector not found")
 
         return username, email, password
 
@@ -72,7 +77,7 @@ class LandingPageTests(FunctionalTest):
         try:
             self.browser.find_element(By.CSS_SELECTOR, self.SELECTOR_LOGIN_FORM)
         except NoSuchElementException:
-            self.fail(f"Login form with selector {self.SELECTOR_LOGIN_FORM} not found")
+            self.fail(f"Login form with {self.SELECTOR_LOGIN_FORM} selector not found")
 
         # the user enters their login details
         username, _, _ = self.login_temporary_user()
@@ -82,7 +87,7 @@ class LandingPageTests(FunctionalTest):
             greeting_text = self.browser.find_element(By.CSS_SELECTOR, self.SELECTOR_CASE_OVERVIEW_HEADER_TEXT).text
             self.assertIn(USER_GREETING_TEXT + username, greeting_text)
         except NoSuchElementException:
-            self.fail(f"Header text with selector {self.SELECTOR_CASE_OVERVIEW_HEADER_TEXT} not found")
+            self.fail(f"Header text with {self.SELECTOR_CASE_OVERVIEW_HEADER_TEXT} selector not found")
 
     @skip
     def test_incorrect_login_details(self):
@@ -92,20 +97,40 @@ class CaseOverviewTests(FunctionalTest):
 
     def test_user_can_create_task(self):
 
-        username, _, password = create_temporary_user()
-        client = Client()
-        client.login(username=username, password=password)
-
         self.browser.get(self.live_server_url)
+        self.login_temporary_user()
 
         # find the create task button
-        # click create task button
-        # wait for create task form to load
-        # enter create task details
-        # submit create task form
-        # check that new task added to the list
+        try:
+            create_task_link = self.browser.find_element(By.CSS_SELECTOR, self.SELECTOR_CREATE_TASK_LINK)
+        except NoSuchElementException:
+            self.fail(f"Button with {self.SELECTOR_CREATE_TASK_LINK} selector not found")
 
-        self.fail("Not implemented")
+        # click create task button
+        create_task_link.click()
+
+        # wait for create task form to load
+        try:
+            self.wait_for(lambda: self.browser.find_element(By.CSS_SELECTOR, self.SELECTOR_CREATE_TASK_FORM))
+        except NoSuchElementException:
+            self.fail(f"Form with {self.SELECTOR_CREATE_TASK_FORM} selector not found")
+
+        new_task_data = create_new_task_data()
+
+        # enter create task details
+        try:
+            self.browser.find_element(By.CSS_SELECTOR, self.SELECTOR_TASK_TITLE_INPUT).send_keys(new_task_data["title"])
+            self.browser.find_element(By.CSS_SELECTOR, self.SELECTOR_TASK_DUE_DATE_INPUT).send_keys(str(new_task_data["due_date"]))
+        except NoSuchElementException as e:
+            self.fail("Selector not found: " + e)
+
+        # submit create task form
+        try:
+            self.browser.find_element(By.CSS_SELECTOR, self.SELECTOR_TASK_CREATE_BTN).click()
+        except NoSuchElementException as e:
+            self.fail(f"Button with {self.SELECTOR_TASK_CREATE_BTN} selector not found")
+
+        # check that new task added to the list
 
     @skip
     def test_user_can_select_task(self):

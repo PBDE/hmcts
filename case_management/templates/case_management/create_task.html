@@ -1,0 +1,13 @@
+{% extends 'case_management/layout.html' %}
+
+{% block body %}
+
+    <h2>Create Task</h2>
+
+    <form class="create-task-form" action="{% url 'case_management:create_task' %}" method="POST">
+        {% csrf_token %}
+        {{ form }}
+        <input class="submit-btn" type="submit" value="Create Task">
+    </form>
+
+{% endblock %}

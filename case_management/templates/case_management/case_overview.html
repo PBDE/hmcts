@@ -2,4 +2,7 @@
 
 {% block body %}
     <h2 class="cases-overview-txt">{{ greeting_message }}{{ request.user.username }}</h2>
+
+    <a class="create-task-link" href="{% url 'case_management:create_task' %}">Create New Task</a>
 {% endblock %}
+

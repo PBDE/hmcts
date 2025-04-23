@@ -8,3 +8,4 @@ class UserDetails(Enum):
 class PatternNames(Enum):
     CASES_OVERVIEW = "case_management:cases_overview"
     LOGIN = "case_management:login"
+    CREATE_TASK = "case_management:create_task"
