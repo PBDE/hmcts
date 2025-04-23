@@ -11,4 +11,10 @@ class CreateTaskForm(forms.Form):
     title = forms.CharField(label="Task Title", max_length=TITLE_MAX_LENGTH)
     due_date = forms.DateField(label="Due Date")
     description = forms.CharField(label="Description", required=False)
+
+class UpdateTaskStatusForm(forms.Form):
+    ...
+
+class AddNoteForm(forms.Form):
+    ...
     

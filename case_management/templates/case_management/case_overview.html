@@ -10,7 +10,7 @@
         </tr>
         {% for task in tasks %}
             <tr>
-                <td>{{ task.title }}</td>
+                <td><a href="{% url 'case_management:task' slug=task.slug %}">{{ task.title }}</a></td>
                 <td>{{ task.due_date }}</td>
             </tr>
         {% endfor %}

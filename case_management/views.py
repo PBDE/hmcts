@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect
 from datetime import datetime
 
-from . forms import LoginForm, CreateTaskForm
+from . forms import LoginForm, CreateTaskForm, UpdateTaskStatusForm, AddNoteForm
 from . enums import PatternNames
 from . models import Task, TaskHistory, TaskNote
 from . text import USER_GREETING_TEXT, LOGIN_ERROR_MESSAGE
@@ -12,6 +12,7 @@ from . text import USER_GREETING_TEXT, LOGIN_ERROR_MESSAGE
 LOGIN_TEMPLATE = "case_management/login.html"
 CASE_OVERVIEW_TEMPLATE = "case_management/case_overview.html"
 CREATE_TASK_TEMPLATE = "case_management/create_task.html"
+TASK_TEMPLATE = "case_management/task.html"
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -45,7 +46,8 @@ def case_overview_view(request):
 
     return render(
         request, 
-        CASE_OVERVIEW_TEMPLATE, {
+        CASE_OVERVIEW_TEMPLATE, 
+        {
             'greeting_message': USER_GREETING_TEXT, 
             "tasks": tasks
         }
@@ -81,7 +83,21 @@ def create_task_view(request):
                     created_by=request.user
                 )
                 new_task_note.save()
+
+            return HttpResponseRedirect(reverse(PatternNames.CASES_OVERVIEW.value))
+
         else:
             return render(request, CREATE_TASK_TEMPLATE, {"form": new_task_form })
 
     return render(request, CREATE_TASK_TEMPLATE, {"form": CreateTaskForm()})
+
+def task_view(request, slug):
+    
+    return render(
+        request, 
+        TASK_TEMPLATE, 
+        {
+            "status_form": UpdateTaskStatusForm(), 
+            "note_form": AddNoteForm()
+        }
+    )

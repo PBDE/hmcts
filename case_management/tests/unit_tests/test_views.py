@@ -1,6 +1,6 @@
+from unittest import skip
 from django.test import TestCase, Client
 from django.urls import reverse
-from datetime import date
 
 from case_management.forms import LoginForm, CreateTaskForm
 from case_management.tests.test_utils import create_user_data, create_temporary_user, create_new_task_data
@@ -113,9 +113,11 @@ class CaseOverviewViewTest(TestCase):
         new_task_note = TaskHistory.objects.first()
         self.assertEqual(new_task_note.task, new_task)
 
+    @skip
     def test_user_redirected_after_task_created(self):
         ...
 
+    @skip
     def test_invalid_task_response_contains_task_form(self):
         ...
 

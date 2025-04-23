@@ -1,15 +1,13 @@
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-from django.test import Client
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import WebDriverException
+from selenium.common.exceptions import NoSuchElementException, WebDriverException
 from unittest import skip
 from time import time, sleep
 
 from case_management.tests.test_utils import create_temporary_user, create_new_task_data
 
-class FunctionalTest(StaticLiveServerTestCase):
+class FunctionalTestCase(StaticLiveServerTestCase):
 
     SELECTOR_USERNAME_INPUT = "input#id_username"
     SELECTOR_PASSWORD_INPUT = "input#id_password"
@@ -21,6 +19,8 @@ class FunctionalTest(StaticLiveServerTestCase):
     SELECTOR_TASK_TITLE_INPUT = "input#id_title"
     SELECTOR_TASK_DUE_DATE_INPUT = "input#id_due_date"
     SELECTOR_TASK_CREATE_BTN = "input.submit-btn"
+    SELECTOR_SELECT_TASK_LINK = "a.task-link"
+    SELECTOR_TASK_HEADER_TEXT = ".task-header-text"
 
     def setUp(self):
         self.browser = webdriver.Firefox()
@@ -54,7 +54,7 @@ class FunctionalTest(StaticLiveServerTestCase):
             self.browser.find_element(By.CSS_SELECTOR, self.SELECTOR_PASSWORD_INPUT).send_keys(password)
             self.browser.find_element(By.CSS_SELECTOR, self.SELECTOR_LOGIN_BTN).click()
         except NoSuchElementException as e:
-            self.fail("Selector not found: " + e)
+            self.fail(f"Selector not found: {e}")
 
         # the registered user is redirected to their user page
         try:
@@ -64,8 +64,23 @@ class FunctionalTest(StaticLiveServerTestCase):
 
         return username, email, password
 
+    def create_new_task(self):
+        new_task_data = create_new_task_data()
 
-class LandingPageTests(FunctionalTest):
+        # enter create task details
+        try:
+            self.browser.find_element(By.CSS_SELECTOR, self.SELECTOR_TASK_TITLE_INPUT).send_keys(new_task_data["title"])
+            self.browser.find_element(By.CSS_SELECTOR, self.SELECTOR_TASK_DUE_DATE_INPUT).send_keys(str(new_task_data["due_date"]))
+        except NoSuchElementException as e:
+            self.fail(f"Selector not found: {e}")
+
+        # submit create task form
+        try:
+            self.browser.find_element(By.CSS_SELECTOR, self.SELECTOR_TASK_CREATE_BTN).click()
+        except NoSuchElementException as e:
+            self.fail(f"Button with {self.SELECTOR_TASK_CREATE_BTN} selector not found")
+
+class LandingPageTestCase(FunctionalTestCase):
 
     def test_user_can_log_in(self):
 
@@ -93,7 +108,7 @@ class LandingPageTests(FunctionalTest):
     def test_incorrect_login_details(self):
         self.fail("Not implemented")
 
-class CaseOverviewTests(FunctionalTest):
+class CaseOverviewTestCase(FunctionalTestCase):
 
     def test_user_can_create_task(self):
 
@@ -115,39 +130,56 @@ class CaseOverviewTests(FunctionalTest):
         except NoSuchElementException:
             self.fail(f"Form with {self.SELECTOR_CREATE_TASK_FORM} selector not found")
 
-        new_task_data = create_new_task_data()
-
-        # enter create task details
-        try:
-            self.browser.find_element(By.CSS_SELECTOR, self.SELECTOR_TASK_TITLE_INPUT).send_keys(new_task_data["title"])
-            self.browser.find_element(By.CSS_SELECTOR, self.SELECTOR_TASK_DUE_DATE_INPUT).send_keys(str(new_task_data["due_date"]))
-        except NoSuchElementException as e:
-            self.fail("Selector not found: " + e)
-
-        # submit create task form
-        try:
-            self.browser.find_element(By.CSS_SELECTOR, self.SELECTOR_TASK_CREATE_BTN).click()
-        except NoSuchElementException as e:
-            self.fail(f"Button with {self.SELECTOR_TASK_CREATE_BTN} selector not found")
+        self.create_new_task()
 
         # check that new task added to the list
+        self.fail("IMPLEMENT: Check that the task is added to the list")
         
+    def test_user_can_select_task(self):
+
+        self.browser.get(self.live_server_url)
+        self.login_temporary_user()
+        self.create_new_task()
+
+        try:
+            task_link = self.browser.find_element(By.CSS_SELECTOR, self.SELECTOR_SELECT_TASK_LINK)
+            task_link.click()
+        except NoSuchElementException:
+            self.fail(f"Link with {self.SELECTOR_SELECT_TASK_LINK} selector not found")
+
+        try:
+            self.wait_for(lambda: self.browser.find_element(By.CSS_SELECTOR, self.SELECTOR_TASK_HEADER_TEXT))
+        except:
+            self.fail(f"Header with {self.SELECTOR_TASK_HEADER_TEXT} selector not found")    
+        
+class TaskPageTestCase(FunctionalTestCase):
 
     @skip
-    def test_user_can_select_task(self):
+    def test_user_can_delete_task(self):
+
+        # login
+        # go to the task creation page
+        # create task
+        # select task
+        # click delete task button
+        # check task no longer exists
+
         self.fail("Not implemented")
-        
-class TaskPageTests(FunctionalTest):
 
     @skip
     def test_user_can_update_task_status(self):
+
+        # login
+        # go to the task creation page
+        # create task
+        # select task
+        # click the update task button
+        # enter the new status
+        # check the status
+
         self.fail("Not implemented")
 
     @skip
     def test_user_can_add_notes(self):
-        self.fail("Not implemented")
-
-    @skip
-    def test_user_can_delete_task(self):
         self.fail("Not implemented")
     

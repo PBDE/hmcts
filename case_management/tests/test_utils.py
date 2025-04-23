@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from datetime import date
 
 from case_management.enums import UserDetails
+from case_management.models import Task, TaskHistory, TaskNote
 
 def random_user_details(input_field_type):
 
@@ -54,3 +55,25 @@ def create_new_task_data():
             "due_date": date(2050, 1, 1),
             "description" : "Task description"
         }
+
+def create_task(username):
+
+    task_data = create_new_task_data()
+    user = get_user_model().objects.filter(username=username)
+
+    new_task = Task(title=task_data["title"], due_date=task_data["due_date"])
+    new_task.save()
+
+    new_task_history = TaskHistory(
+        status="U",
+        task=new_task, 
+        created_by=user
+    )
+    new_task_history.save()
+
+    new_task_note = TaskNote(
+        description=task_data["description"], 
+        task=new_task, 
+        created_by=user
+    )
+    new_task_note.save()
