@@ -131,6 +131,7 @@ class CaseOverviewTests(FunctionalTest):
             self.fail(f"Button with {self.SELECTOR_TASK_CREATE_BTN} selector not found")
 
         # check that new task added to the list
+        
 
     @skip
     def test_user_can_select_task(self):

@@ -81,10 +81,14 @@ class CaseOverviewViewTest(TestCase):
         )
 
     def test_overview_template_returned(self):
+
+        self.login_temporary_user()
         response = self.client.get(reverse(PatternNames.CREATE_TASK.value))
         self.assertTemplateUsed(response, CREATE_TASK_TEMPLATE)
 
     def test_create_task_form_returned(self):
+
+        self.login_temporary_user()
         response = self.client.get(reverse(PatternNames.CREATE_TASK.value))
         self.assertIsInstance(response.context["form"], CreateTaskForm)
 

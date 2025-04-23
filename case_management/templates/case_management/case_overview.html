@@ -2,7 +2,19 @@
 
 {% block body %}
     <h2 class="cases-overview-txt">{{ greeting_message }}{{ request.user.username }}</h2>
-
     <a class="create-task-link" href="{% url 'case_management:create_task' %}">Create New Task</a>
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Due Date</th>
+        </tr>
+        {% for task in tasks %}
+            <tr>
+                <td>{{ task.title }}</td>
+                <td>{{ task.due_date }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
 {% endblock %}
 

@@ -37,9 +37,24 @@ def login_view(request):
     })
 
 def case_overview_view(request):
-    return render(request, CASE_OVERVIEW_TEMPLATE, {'greeting_message': USER_GREETING_TEXT})
+
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse(PatternNames.LOGIN.value))
+    
+    tasks = Task.objects.all()
+
+    return render(
+        request, 
+        CASE_OVERVIEW_TEMPLATE, {
+            'greeting_message': USER_GREETING_TEXT, 
+            "tasks": tasks
+        }
+    )
 
 def create_task_view(request):
+
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse(PatternNames.LOGIN.value))
 
     if request.method == "POST":
         new_task_form = CreateTaskForm(request.POST)
