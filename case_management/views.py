@@ -41,9 +41,7 @@ def case_overview_view(request):
 
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse(PatternNames.LOGIN.value))
-    
     tasks = Task.objects.all()
-
     return render(
         request, 
         CASE_OVERVIEW_TEMPLATE, 
@@ -92,12 +90,56 @@ def create_task_view(request):
     return render(request, CREATE_TASK_TEMPLATE, {"form": CreateTaskForm()})
 
 def task_view(request, slug):
+
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse(PatternNames.LOGIN.value))
+
+    task = Task.objects.filter(slug=slug).first()
+    
+    ## check for empty task
+
+    if "status_form" in request.POST:
+        update_status_form = UpdateTaskStatusForm(request.POST)
+        if update_status_form.is_valid():
+            status_update = update_status_form.cleaned_data["status"]
+            new_status = TaskHistory(
+                status=status_update,
+                task=task,
+                created_by=request.user
+                )
+            new_status.save()
+
+    if "note_form" in request.POST:
+
+        print("Note")
+
+        add_note_form = AddNoteForm(request.POST)
+        if add_note_form.is_valid():
+            note_text = add_note_form.cleaned_data["note"]
+            new_note = TaskNote(
+                description=note_text,
+                task=task,
+                created_by=request.user
+            )
+            new_note.save()
+
+    
+    if "delete_form" in request.POST:
+        print("delete")
+        # task.delete()
+        HttpResponseRedirect(reverse(PatternNames.CASES_OVERVIEW.value))
+
+    task_histories = TaskHistory.objects.filter(task=task)
+    task_notes = TaskNote.objects.filter(task=task)
     
     return render(
-        request, 
+        request,
         TASK_TEMPLATE, 
         {
-            "status_form": UpdateTaskStatusForm(), 
+            "task": task,
+            "task_history": task_histories,
+            "task_notes": task_notes,
+            "status_form": UpdateTaskStatusForm(),
             "note_form": AddNoteForm()
         }
     )

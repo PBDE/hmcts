@@ -25,7 +25,7 @@ class TaskHistory(models.Model):
         "R": "Review pending"
     }
 
-    status = models.CharField(max_length=1, choices=STATUS_OPTIONS)
+    status = models.CharField(max_length=1, choices=STATUS_OPTIONS, default="U")
     date_created = models.DateTimeField(auto_now_add=True)
     task = models.ForeignKey(Task, on_delete=models.PROTECT)
     created_by = models.ForeignKey(get_user_model(), on_delete=models.PROTECT, related_name='created_tasks')

@@ -1,5 +1,5 @@
 from django import forms
-from . models import TITLE_MAX_LENGTH
+from . models import TITLE_MAX_LENGTH, TaskHistory
 
 class LoginForm(forms.Form):
 
@@ -13,8 +13,8 @@ class CreateTaskForm(forms.Form):
     description = forms.CharField(label="Description", required=False)
 
 class UpdateTaskStatusForm(forms.Form):
-    ...
+    status = forms.ChoiceField(choices=TaskHistory.STATUS_OPTIONS)
 
 class AddNoteForm(forms.Form):
-    ...
+    note = forms.CharField()
     

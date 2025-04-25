@@ -2,23 +2,53 @@
 
 {% block body %}
 
-    <h2>Task: {{ name }}</h2>
+    <h2>Task: {{ task.title }}</h2>
 
-    <form method="POST">
+    <table>
+        <tr>
+            <th>Status</th>
+            <th>Date</th>
+            <th>User</th>
+        </tr>
+        {% for task_history in task_history %}
+            <tr>
+                <td>{{ task_history.status }}</td>
+                <td>{{ task_history.date_created }}</td>
+                <td>{{ task_history.created_by }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <table>
+        <tr>
+            <th>Status</th>
+            <th>Date</th>
+            <th>User</th>
+        </tr>
+        {% for task_note in task_notes %}
+            <tr>
+                <td>{{ task_note.description }}</td>
+                <td>{{ task_note.date_created }}</td>
+                <td>{{ task_note.created_by }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <form class="update-status-form" action="{% url 'case_management:task' slug=task.slug %}" method="POST">
         {% csrf_token %}
         {{ status_form }}
-        <input class="submit-btn" type="submit" value="Update Status">
+        <input class="submit-btn" name="status_form" type="submit" value="Update Status">
     </form>
 
-    <form method="POST">
+    <form class="update-status-form" action="{% url 'case_management:task' slug=task.slug %}" method="POST">
         {% csrf_token %}
         {{ note_form }}
-        <input class="submit-btn" type="submit" value="Add Note">
+        <input class="submit-btn" name="note_form" type="submit" value="Add Note">
     </form>
 
-    <form method="POST">
+    <form class="update-status-form" action="{% url 'case_management:task' slug=task.slug %}" method="POST">
         {% csrf_token %}
-        <input class="submit-btn" type="submit" value="Delete Task">
+        <input class="submit-btn" name="delete_form" type="submit" value="Delete Task">
     </form>
 
 {% endblock %}
