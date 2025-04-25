@@ -9,6 +9,10 @@
 </head>
 <body>
     <h1>HMCTS Case Management System</h1>
+    <a href="{% url 'case_management:cases_overview' %}">Home</a>
+    {% if user.is_authenticated %}
+        <a href="{% url 'case_management:logout' %}">Logout</a>
+    {% endif %}
     {% block body %}{% endblock %}
 </body>
 </html>

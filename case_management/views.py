@@ -1,8 +1,7 @@
 from django.shortcuts import render
 from django.urls import reverse
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect
-from datetime import datetime
 
 from . forms import LoginForm, CreateTaskForm, UpdateTaskStatusForm, AddNoteForm
 from . enums import PatternNames
@@ -13,6 +12,7 @@ LOGIN_TEMPLATE = "case_management/login.html"
 CASE_OVERVIEW_TEMPLATE = "case_management/case_overview.html"
 CREATE_TASK_TEMPLATE = "case_management/create_task.html"
 TASK_TEMPLATE = "case_management/task.html"
+TASK_NOT_FOUND_TEMPLATE = "case_management/task_not_found.html"
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -94,9 +94,11 @@ def task_view(request, slug):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse(PatternNames.LOGIN.value))
 
-    task = Task.objects.filter(slug=slug).first()
-    
-    ## check for empty task
+    task = Task.objects.filter(slug=slug).first() # check for empty task
+
+    if not task:
+        return render(request, TASK_NOT_FOUND_TEMPLATE)
+
 
     if "status_form" in request.POST:
         update_status_form = UpdateTaskStatusForm(request.POST)
@@ -111,8 +113,6 @@ def task_view(request, slug):
 
     if "note_form" in request.POST:
 
-        print("Note")
-
         add_note_form = AddNoteForm(request.POST)
         if add_note_form.is_valid():
             note_text = add_note_form.cleaned_data["note"]
@@ -122,12 +122,11 @@ def task_view(request, slug):
                 created_by=request.user
             )
             new_note.save()
-
     
     if "delete_form" in request.POST:
         print("delete")
-        # task.delete()
-        HttpResponseRedirect(reverse(PatternNames.CASES_OVERVIEW.value))
+        task.delete()
+        return HttpResponseRedirect(reverse(PatternNames.CASES_OVERVIEW.value))
 
     task_histories = TaskHistory.objects.filter(task=task)
     task_notes = TaskNote.objects.filter(task=task)
@@ -143,3 +142,7 @@ def task_view(request, slug):
             "note_form": AddNoteForm()
         }
     )
+
+def logout_view(request):
+    logout(request)
+    return HttpResponseRedirect(reverse(PatternNames.LOGIN.value))

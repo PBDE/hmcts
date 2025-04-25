@@ -10,6 +10,9 @@ class Task(models.Model):
     slug = models.SlugField(unique=True, blank=True)
     due_date = models.DateField()
 
+    def __str__(self):
+        return f"Task: {self.title}"
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
@@ -27,13 +30,19 @@ class TaskHistory(models.Model):
 
     status = models.CharField(max_length=1, choices=STATUS_OPTIONS, default="U")
     date_created = models.DateTimeField(auto_now_add=True)
-    task = models.ForeignKey(Task, on_delete=models.PROTECT)
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
     created_by = models.ForeignKey(get_user_model(), on_delete=models.PROTECT, related_name='created_tasks')
     assigned_to = models.ForeignKey(get_user_model(), on_delete=models.PROTECT, related_name='assigned_tasks', null=True)
+
+    def __str__(self):
+        return f"History for {self.task}"
 
 class TaskNote(models.Model):
 
     description = models.CharField()
     date_created = models.DateTimeField(auto_now_add=True)
-    task = models.ForeignKey(Task, on_delete=models.PROTECT)
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
     created_by = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
+
+    def __str__(self):
+        return f"Note for {self.task}"

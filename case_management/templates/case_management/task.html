@@ -3,6 +3,8 @@
 {% block body %}
 
     <h2>Task: {{ task.title }}</h2>
+    <h3>Due: {{ task.due_date }}</h3>
+
 
     <table>
         <tr>
@@ -21,7 +23,7 @@
 
     <table>
         <tr>
-            <th>Status</th>
+            <th>Note</th>
             <th>Date</th>
             <th>User</th>
         </tr>
