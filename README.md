@@ -51,7 +51,7 @@ The main files of interest for the purpose of reviewing the code can all be foun
 5. Make migrations:
 
    py manage.py makemigrations  
-   py mangepy migrate
+   py manage.py migrate
 
 6. Run the development server:
 
