@@ -24,7 +24,7 @@ The main files of interest for the purpose of reviewing the code can all be foun
 
 1. Clone the repository:
 
-   git clone https://github.com/PBDE/hmcts/tree/master
+   git clone https://github.com/PBDE/hmcts/tree/master  
    cd HMCTSCaseManagement
    
 2. Set up a virtual environment:
