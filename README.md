@@ -16,19 +16,20 @@ The main files of interest for the purpose of reviewing the code can all be foun
 
 - **models.py**
 - **views.py**
-- **tests\functional_tests\test_case_management.py**
-- **tests\functional_tests\test_views.py**
-- **templates\case_management\*.html**
+- **tests/functional_tests/test_case_management.py**
+- **tests/functional_tests/test_views.py**
+- **templates/case_management/*.html**
 
 ## Installation
 
 1. Clone the repository:
-   ```bash
-   git clone <repository-url>
+
+   git clone https://github.com/PBDE/hmcts/tree/master
    cd HMCTSCaseManagement
    
 2. Set up a virtual environment:
-   python -m venv hmcts-env
+
+   python -m venv hmcts-env  
    source hmcts-env/bin/activate  # On Windows: hmcts-env\Scripts\activate
 
 3. Install dependencies:
@@ -37,19 +38,19 @@ The main files of interest for the purpose of reviewing the code can all be foun
 
 4. Set up environment variables: Create a .env file in the hmcts/ directory with the following variables (these variables are for development only):
 
-   SECRET_KEY=<your-secret-key>
-   DEBUG=True
-   ALLOWED_HOSTS=localhost,127.0.0.1
-   SECURE_SSL_REDIRECT=False
-   SECURE_HSTS_SECONDS=0
-   SECURE_HSTS_INCLUDE_SUBDOMAINS=False
-   SECURE_HSTS_PRELOAD=False
-   SESSION_COOKIE_SECURE=False
-   CSRF_COOKIE_SECURE=False
+   SECRET_KEY=<your-secret-key>  
+   DEBUG=True  
+   ALLOWED_HOSTS=localhost,127.0.0.1  
+   SECURE_SSL_REDIRECT=False  
+   SECURE_HSTS_SECONDS=0  
+   SECURE_HSTS_INCLUDE_SUBDOMAINS=False  
+   SECURE_HSTS_PRELOAD=False  
+   SESSION_COOKIE_SECURE=False  
+   CSRF_COOKIE_SECURE=False  
 
 5. Make migrations:
 
-   py manage.py makemigrations
+   py manage.py makemigrations  
    py mangepy migrate
 
 6. Run the development server:
