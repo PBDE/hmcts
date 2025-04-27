@@ -59,7 +59,7 @@ The main files of interest for the purpose of reviewing the code can all be foun
 
 ## Running tests
 
-py manage.py test case_management.tests.unit_tests
+py manage.py test case_management.tests.unit_tests  
 py manage.py test case_management.tests.functional_tests
 
 
